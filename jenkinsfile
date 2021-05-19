@@ -78,7 +78,7 @@ pipeline {
             agent any
             steps {
                 echo 'dockerizing start...'
-                sh 'docker build . -t tom9'
+                sh 'sudo docker build . -t tom9'
                 echo 'docker image ls'
             }
             
