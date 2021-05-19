@@ -21,7 +21,10 @@ pipeline {
             agent any
 
             steps {
-                echo "start clone repo.... ENV: ${ENV}"
+                echo AWS_ACCESS_KEY_ID
+                echo AWS_SECRET_ACCESS_KEY
+                echo AWS_DEFAULT_REGION
+                echo "cloning git repo..."
 
                 git url: 'https://github.com/2012monk/ci_sample.git',
                     branch: 'master',
