@@ -74,6 +74,16 @@ pipeline {
             }
         }
 
+        stage('Dockerizing') {
+            agent any
+            steps {
+                echo 'dockerizing start...'
+                sh 'docker build . -t tom9'
+                echo 'docker image ls'
+            }
+            
+        }
+
 
 
 
