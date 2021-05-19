@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('*/3 * * * *')
-    }
+    // triggers {
+
+    // }
 
     environment {
         AWS_ACCESS_KEY_ID= credentials('awsAccessKeyId')
