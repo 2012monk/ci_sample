@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('*/3 * * * *')
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID= credentials('awsAccessKeyId')
+        AWS_SECRET_ACCESS_KEY= credentials('awsSecretAccessKey')
+        AWS_DEFAULT_REGION='ap-northeast-2'
+        HOME='.'
+    }
+
+    tools {
+        maven 'maven_default'
+    }
+
+    stages {
+        stage('Prepare') {
+            agent any
+
+            steps {
+                echo "start clone repo.... ENV: ${ENV}"
+
+                git url: 'https://github.com/2012monk/ci_sample.git',
+                    branch: 'master',
+                    credentialsId: 'monkgit'
+            }
+
+            post {
+
+                success {
+                    echo 'prepare success'
+                }
+
+                always {
+                    echo 'done build'
+                }
+
+                cleanup {
+                    echo 'after all other post conditions'
+                }
+            }
+        }
+
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH=${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+        }
+
+        stage('Build') {
+            agent any
+            steps {
+                echo 'maven build start...'
+                sh 'mvn -Dmaven.test.failure.ignore=true install'
+            }
+
+            post {
+                success {
+                    echo 'maven build success'
+                }
+
+                failure {
+                    echo 'build failed'
+                } 
+            }
+        }
+
+
+
+
+    }
+}
