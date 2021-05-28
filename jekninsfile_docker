@@ -1,0 +1,22 @@
+node {
+    
+    
+        stage('Fetch') {
+                git url: 'https://github.com/2012monk/ci_sample.git',
+                    branch: 'master',
+                    credentialsId: '2012monk'
+        }
+        stage('Build mvn') {
+            def m = tool 'maven_default'
+            echo "${m}"
+            sh "${m}/bin/mvn -Dmaven.test.failure.ignore=true install"
+
+        }
+        stage('Docker build') {
+                app = docker.build('monk/test:lts') 
+        }
+        
+        stage('deploy') {
+            app.run()
+        }
+}
